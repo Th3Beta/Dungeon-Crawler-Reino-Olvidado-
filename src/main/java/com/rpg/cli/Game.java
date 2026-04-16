@@ -1,3 +1,5 @@
+package com.rpg.cli;
+
 import Characters.*;
 import Characters.factory.PlayerFactory;
 import Map.Map;

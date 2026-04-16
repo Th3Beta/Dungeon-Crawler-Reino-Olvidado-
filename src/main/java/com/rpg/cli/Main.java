@@ -1,5 +1,8 @@
+package com.rpg.cli;
+
 import java.util.Scanner;
 import Management.FileManager;
+import Map.Map;
 
 public class Main {
     // =========================================================

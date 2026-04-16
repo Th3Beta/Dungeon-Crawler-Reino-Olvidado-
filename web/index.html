@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reino Olvidado — RPG Roguelike</title>
+  <meta name="description" content="Explora el Reino Olvidado en este RPG Roguelike de mazmorras estilo D&D. Crea tu héroe, combate monstruos y escala en el ranking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     PANTALLA 1: MENÚ PRINCIPAL
+══════════════════════════════════════════════════════════ -->
+<div id="screen-menu" class="screen active">
+  <div class="particles" id="particles"></div>
+  <div class="menu-container">
+    <div class="menu-ornament top">⚜</div>
+    <h1 class="game-title">
+      <span class="title-main">Reino Olvidado</span>
+      <span class="title-sub">Crónicas del Abismo</span>
+    </h1>
+    <div class="menu-ornament bottom">⚜</div>
+
+    <div class="menu-divider"><span>✦ ✦ ✦</span></div>
+
+    <nav class="main-menu">
+      <button id="btn-new-game" class="menu-btn primary" onclick="showCharacterCreation()">
+        <span class="btn-icon">⚔️</span> Nueva Partida
+      </button>
+      <button id="btn-ranking" class="menu-btn secondary" onclick="showRanking()">
+        <span class="btn-icon">🏆</span> Salón de la Gloria
+      </button>
+    </nav>
+
+    <div class="menu-footer">
+      <p class="lore-text">«En las profundidades del reino yacen secretos que los mortales han olvidado...»</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PANTALLA 2: CREACIÓN DE PERSONAJE
+══════════════════════════════════════════════════════════ -->
+<div id="screen-create" class="screen">
+  <div class="create-container">
+    <div class="panel-header">
+      <span class="panel-rune">ᚱ</span>
+      <h2>Elige tu Destino</h2>
+      <span class="panel-rune">ᚦ</span>
+    </h2>
+    </div>
+
+    <div class="name-input-group">
+      <label for="hero-name">Nombre del Héroe</label>
+      <input id="hero-name" type="text" placeholder="¿Cómo te llaman, aventurero?" maxlength="20" />
+    </div>
+
+    <div class="class-grid">
+      <!-- Warrior -->
+      <div class="class-card" id="card-warrior" onclick="selectClass('warrior')" tabindex="0">
+        <div class="class-icon">⚔️</div>
+        <h3 class="class-name">Guerrero</h3>
+        <div class="class-stats">
+          <div class="stat-row"><span>HP</span><div class="stat-bar"><div class="fill" style="width:100%"></div></div><span>120</span></div>
+          <div class="stat-row"><span>ATK</span><div class="stat-bar"><div class="fill" style="width:67%"></div></div><span>20</span></div>
+          <div class="stat-row"><span>DEF</span><div class="stat-bar"><div class="fill" style="width:80%"></div></div><span>10</span></div>
+        </div>
+        <p class="class-desc">Tanque cuerpo a cuerpo. Infatigable en batalla.</p>
+        <div class="class-special">✦ Golpe Aplastante</div>
+      </div>
+
+      <!-- Mage -->
+      <div class="class-card" id="card-mage" onclick="selectClass('mage')" tabindex="0">
+        <div class="class-icon">🔮</div>
+        <h3 class="class-name">Mago</h3>
+        <div class="class-stats">
+          <div class="stat-row"><span>HP</span><div class="stat-bar"><div class="fill" style="width:50%"></div></div><span>80</span></div>
+          <div class="stat-row"><span>ATK</span><div class="stat-bar"><div class="fill" style="width:50%"></div></div><span>15</span></div>
+          <div class="stat-row"><span>DEF</span><div class="stat-bar"><div class="fill" style="width:33%"></div></div><span>5</span></div>
+        </div>
+        <p class="class-desc">Daño mágico explosivo. Domina los secretos arcanos.</p>
+        <div class="class-special">✦ Bola de Fuego</div>
+      </div>
+
+      <!-- Archer -->
+      <div class="class-card" id="card-archer" onclick="selectClass('archer')" tabindex="0">
+        <div class="class-icon">🏹</div>
+        <h3 class="class-name">Arquero</h3>
+        <div class="class-stats">
+          <div class="stat-row"><span>HP</span><div class="stat-bar"><div class="fill" style="width:65%"></div></div><span>90</span></div>
+          <div class="stat-row"><span>ATK</span><div class="stat-bar"><div class="fill" style="width:60%"></div></div><span>18</span></div>
+          <div class="stat-row"><span>DEF</span><div class="stat-bar"><div class="fill" style="width:40%"></div></div><span>6</span></div>
+        </div>
+        <p class="class-desc">Equilibrado y veloz. Maestro del arco y la sombra.</p>
+        <div class="class-special">✦ Lluvia de Flechas</div>
+      </div>
+    </div>
+
+    <div class="create-actions">
+      <button class="menu-btn secondary" onclick="showMenu()">← Volver</button>
+      <button id="btn-start" class="menu-btn primary" onclick="startGame()" disabled>
+        <span class="btn-icon">🗡️</span> Comenzar Aventura
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PANTALLA 3: JUEGO
+══════════════════════════════════════════════════════════ -->
+<div id="screen-game" class="screen">
+
+  <!-- HUD superior -->
+  <header class="game-hud" id="game-hud">
+    <div class="hud-section hud-left">
+      <div class="hud-name" id="hud-name">Héroe</div>
+      <div class="hud-class" id="hud-class">Guerrero · Nivel <span id="hud-level">1</span></div>
+    </div>
+    <div class="hud-section hud-center">
+      <div class="hud-bar-group">
+        <label>HP</label>
+        <div class="hud-bar hp-bar">
+          <div class="bar-fill" id="bar-hp"></div>
+          <span class="bar-text" id="text-hp">0/0</span>
+        </div>
+      </div>
+      <div class="hud-bar-group">
+        <label>MANÁ</label>
+        <div class="hud-bar mana-bar">
+          <div class="bar-fill" id="bar-mana"></div>
+          <span class="bar-text" id="text-mana">0/0</span>
+        </div>
+      </div>
+      <div class="hud-bar-group">
+        <label>EXP</label>
+        <div class="hud-bar exp-bar">
+          <div class="bar-fill" id="bar-exp"></div>
+          <span class="bar-text" id="text-exp">0/100</span>
+        </div>
+      </div>
+    </div>
+    <div class="hud-section hud-right">
+      <div class="hud-stat">🏰 Piso <span id="hud-floor">1</span></div>
+      <div class="hud-stat">⏱ Turno <span id="hud-turn">1</span></div>
+      <div class="hud-stat">⭐ Score: <span id="hud-score">0</span></div>
+    </div>
+  </header>
+
+  <!-- Área principal -->
+  <main class="game-main">
+
+    <!-- Mapa -->
+    <section class="map-section">
+      <div class="map-title">
+        <span class="map-rune">⚜</span> El Reino Olvidado <span class="map-rune">⚜</span>
+      </div>
+      <div class="map-wrapper">
+        <div id="game-map" class="game-map"></div>
+      </div>
+      <!-- Controls hint -->
+      <div class="controls-hint">
+        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Moverse
+        &nbsp;·&nbsp;
+        <kbd>I</kbd> Inventario
+        &nbsp;·&nbsp;
+        <kbd>X</kbd> Guardar &amp; Salir
+      </div>
+    </section>
+
+    <!-- Panel lateral derecho -->
+    <aside class="side-panel">
+
+      <!-- Equipo -->
+      <div class="panel-card equip-card">
+        <div class="panel-card-title">⚔️ Equipo</div>
+        <div class="equip-slot" id="equip-weapon">🗡️ Sin arma</div>
+        <div class="equip-slot" id="equip-armor">🛡️ Sin armadura</div>
+      </div>
+
+      <!-- Inventario -->
+      <div class="panel-card inventory-card">
+        <div class="panel-card-title">🎒 Inventario</div>
+        <div id="inventory-list" class="inventory-list">
+          <div class="inv-empty">— vacío —</div>
+        </div>
+      </div>
+
+      <!-- Leyenda -->
+      <div class="panel-card legend-card">
+        <div class="panel-card-title">📜 Leyenda</div>
+        <div class="legend-grid">
+          <div class="legend-item"><span class="legend-cell player">@</span> Tú</div>
+          <div class="legend-item"><span class="legend-cell enemy">g</span> Enemigo</div>
+          <div class="legend-item"><span class="legend-cell boss">B</span> Jefe</div>
+          <div class="legend-item"><span class="legend-cell chest">C</span> Cofre</div>
+          <div class="legend-item"><span class="legend-cell stairs">></span> Escaleras</div>
+          <div class="legend-item"><span class="legend-cell water">~</span> Agua</div>
+          <div class="legend-item"><span class="legend-cell mountain">^</span> Montaña</div>
+          <div class="legend-item"><span class="legend-cell tree">T</span> Árbol</div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="panel-card action-card">
+        <button class="action-btn save-btn" onclick="sendAction('save')">💾 Guardar &amp; Salir</button>
+        <button class="action-btn quit-btn" onclick="sendAction('quit')">🚪 Abandonar</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Panel de eventos -->
+  <footer class="event-log" id="event-log">
+    <div class="log-title">📖 Crónica del Aventurero</div>
+    <div id="log-entries" class="log-entries"></div>
+  </footer>
+
+  <!-- Evento flash (banner) -->
+  <div id="event-banner" class="event-banner hidden"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL: COMBATE
+══════════════════════════════════════════════════════════ -->
+<div id="modal-combat" class="modal hidden">
+  <div class="modal-overlay"></div>
+  <div class="modal-panel combat-panel">
+    <div class="combat-header">
+      <span class="combat-rune">⚔️</span>
+      <h2 id="combat-title">¡COMBATE!</h2>
+      <span class="combat-rune">⚔️</span>
+    </div>
+
+    <div class="combat-arena">
+      <!-- Enemigo -->
+      <div class="combatant enemy-side">
+        <div class="combatant-icon enemy-icon" id="combat-enemy-icon">👹</div>
+        <div class="combatant-name" id="combat-enemy-name">Goblin</div>
+        <div class="combatant-bar">
+          <div class="bar-fill enemy-fill" id="combat-enemy-bar"></div>
+        </div>
+        <div class="combatant-hp" id="combat-enemy-hp">40/40</div>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <!-- Jugador -->
+      <div class="combatant player-side">
+        <div class="combatant-icon player-icon" id="combat-player-icon">🧙</div>
+        <div class="combatant-name" id="combat-player-name">Héroe</div>
+        <div class="combatant-bar">
+          <div class="bar-fill player-fill" id="combat-player-bar"></div>
+        </div>
+        <div class="combatant-hp" id="combat-player-hp">100/100</div>
+        <div class="combatant-mana">
+          <span>Maná:</span>
+          <div class="bar-fill mana-fill" id="combat-mana-bar" style="width:100%"></div>
+          <span id="combat-mana-text">50/50</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de combate -->
+    <div id="combat-message" class="combat-message">¡El combate comienza!</div>
+
+    <!-- Botones de acción -->
+    <div class="combat-actions">
+      <button id="btn-attack" class="combat-btn attack-btn" onclick="sendCombatAction('attack')">
+        <span>🗡️</span> Atacar
+      </button>
+      <button id="btn-special" class="combat-btn special-btn" onclick="sendCombatAction('special')">
+        <span>✨</span> Especial
+      </button>
+      <button id="btn-use-item" class="combat-btn item-btn" onclick="openCombatInventory()">
+        <span>🧪</span> Ítem
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL: INVENTARIO (en combate o exploración)
+══════════════════════════════════════════════════════════ -->
+<div id="modal-inventory" class="modal hidden">
+  <div class="modal-overlay" onclick="closeInventoryModal()"></div>
+  <div class="modal-panel inventory-modal">
+    <div class="panel-header">
+      <h2>🎒 Inventario</h2>
+      <button class="close-btn" onclick="closeInventoryModal()">✕</button>
+    </div>
+    <div id="modal-inv-list" class="modal-inv-list"></div>
+    <p class="inv-hint">Haz clic en un ítem para usarlo.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PANTALLA 4: RANKING
+══════════════════════════════════════════════════════════ -->
+<div id="screen-ranking" class="screen">
+  <div class="ranking-container">
+    <div class="panel-header">
+      <span class="panel-rune">ᚷ</span>
+      <h2>⚜ Salón de la Gloria ⚜</h2>
+      <span class="panel-rune">ᚷ</span>
+    </div>
+    <div class="ranking-subtitle">Los héroes que desafiaron las sombras</div>
+
+    <div id="ranking-table-wrapper" class="ranking-table-wrapper">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Héroe</th>
+            <th>Clase</th>
+            <th>Piso</th>
+            <th>Nivel</th>
+            <th>Turnos</th>
+            <th>Puntuación</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="ranking-body"></tbody>
+      </table>
+      <div id="ranking-empty" class="ranking-empty hidden">
+        <span>📜</span>
+        <p>El salón aguarda sus primeros héroes...</p>
+      </div>
+    </div>
+
+    <button class="menu-btn secondary" onclick="showMenu()">← Volver al Inicio</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PANTALLA 5: GAME OVER / victoria
+══════════════════════════════════════════════════════════ -->
+<div id="screen-gameover" class="screen">
+  <div class="gameover-container">
+    <div class="gameover-skull" id="gameover-icon">💀</div>
+    <h2 id="gameover-title">Fin de la Aventura</h2>
+    <p id="gameover-subtitle">Tu leyenda ha llegado a su fin.</p>
+
+    <div class="gameover-stats" id="gameover-stats"></div>
+
+    <div class="gameover-actions">
+      <button class="menu-btn primary" onclick="showCharacterCreation()">⚔️ Nueva Partida</button>
+      <button class="menu-btn secondary" onclick="showRanking()">🏆 Ver Ranking</button>
+      <button class="menu-btn ghost" onclick="showMenu()">🏠 Menú Principal</button>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

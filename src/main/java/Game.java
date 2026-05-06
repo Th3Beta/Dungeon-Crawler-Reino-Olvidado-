@@ -1,5 +1,3 @@
-package com.rpg.cli;
-
 import Characters.*;
 import Characters.factory.PlayerFactory;
 import Map.Map;
@@ -15,7 +13,7 @@ import java.io.Serializable;
 
 public class Game implements Serializable {
     // =========================================================
-    //  ESTILO VISUAL DE INTERFAZ (ANSI)
+    // ESTILO VISUAL DE INTERFAZ (ANSI)
     // =========================================================
 
     private static final String RESET = "\u001B[0m";
@@ -55,7 +53,7 @@ public class Game implements Serializable {
     }
 
     // =========================================================
-    //  MENÚ DE GESTIÓN DE GRUPO
+    // MENÚ DE GESTIÓN DE GRUPO
     // =========================================================
 
     private void partyManagementMenu() {
@@ -95,7 +93,7 @@ public class Game implements Serializable {
     }
 
     // =========================================================
-    //  CREACIÓN DE PERSONAJE (usa PlayerFactory)
+    // CREACIÓN DE PERSONAJE (usa PlayerFactory)
     // =========================================================
 
     private void createCharacter() {
@@ -105,11 +103,12 @@ public class Game implements Serializable {
         System.out.println("  3 - Archer   (HP:  90 | ATK: 18 | DEF:  6) - Equilibrado y veloz");
 
         int choice = readIntInRange(1, 3);
-        String[] types = {"warrior", "mage", "archer"};
+        String[] types = { "warrior", "mage", "archer" };
 
         System.out.print("Nombre de tu personaje: ");
         String name = sc.nextLine().trim();
-        if (name.isEmpty()) name = "Héroe";
+        if (name.isEmpty())
+            name = "Héroe";
 
         try {
             Player newPlayer = PlayerFactory.create(types[choice - 1], name);
@@ -120,7 +119,7 @@ public class Game implements Serializable {
     }
 
     // =========================================================
-    //  BUCLE PRINCIPAL DE JUEGO
+    // BUCLE PRINCIPAL DE JUEGO
     // =========================================================
 
     public void start() {
@@ -149,7 +148,7 @@ public class Game implements Serializable {
                     setEvent("Abandonando aventura (progreso no guardado)...");
                     System.out.println(YELLOW + lastEvent + RESET);
                 }
-                default  -> handleMovement(option);
+                default -> handleMovement(option);
             }
 
             // Limpieza tras cada accion del jugador.
@@ -164,7 +163,7 @@ public class Game implements Serializable {
     }
 
     // =========================================================
-    //  ACCIONES DEL BUCLE PRINCIPAL
+    // ACCIONES DEL BUCLE PRINCIPAL
     // =========================================================
 
     private void handleMovement(char direction) {
@@ -173,7 +172,8 @@ public class Game implements Serializable {
         resolveCombatIfNeeded();
 
         if (activePlayer.isAlive() && map.isOnStairs()) {
-            System.out.println(BOLD + CYAN + "¡Has encontrado las escaleras! Desciendes a las profundidades..." + RESET);
+            System.out
+                    .println(BOLD + CYAN + "¡Has encontrado las escaleras! Desciendes a las profundidades..." + RESET);
             currentFloor++;
             map = new Map(25, currentFloor);
             setEvent("Has bajado al Piso " + currentFloor + ".");
@@ -190,7 +190,8 @@ public class Game implements Serializable {
 
     private void handleChestLoot() {
         Item loot = map.collectChestLoot();
-        if (loot == null) return;
+        if (loot == null)
+            return;
         System.out.println(BOLD + YELLOW + "¡Has abierto un cofre!" + RESET);
         inventory.addItem(loot);
         setEvent("Botin conseguido: " + loot.getName());
@@ -198,7 +199,8 @@ public class Game implements Serializable {
 
     private void resolveCombatIfNeeded() {
         Enemy enemy = map.checkEnemy();
-        if (enemy == null) return;
+        if (enemy == null)
+            return;
 
         setEvent("Encuentro hostil con " + enemy.getName() + ".");
         Combat.fight(activePlayer, enemy, sc);
@@ -226,7 +228,7 @@ public class Game implements Serializable {
     }
 
     // =========================================================
-    //  HUD (cabecera de estado del jugador)
+    // HUD (cabecera de estado del jugador)
     // =========================================================
 
     private void printHud() {
@@ -237,13 +239,16 @@ public class Game implements Serializable {
 
         System.out.println(BOLD + WHITE + "============================================================" + RESET);
         System.out.printf(BOLD + " Piso %d | Turno %d | %s%s%s | Nivel %d | EXP %d%n" + RESET,
-                currentFloor, turnCount, CYAN, activePlayer.getName(), RESET, activePlayer.getLevel(), activePlayer.getExp());
+                currentFloor, turnCount, CYAN, activePlayer.getName(), RESET, activePlayer.getLevel(),
+                activePlayer.getExp());
         System.out.printf(" HP   %s %d/%d%n", makeBar(hp, maxHp, 20, GREEN, RED), hp, maxHp);
         System.out.printf(" Mana %s %d/%d%n", makeBar(mana, maxMana, 20, CYAN, WHITE), mana, maxMana);
-        
+
         String equipInfo = "";
-        if (activePlayer.getEquippedWeapon() != null) equipInfo += "🗡️ " + activePlayer.getEquippedWeapon().getName() + "  ";
-        if (activePlayer.getEquippedArmor() != null) equipInfo += "🛡️ " + activePlayer.getEquippedArmor().getName();
+        if (activePlayer.getEquippedWeapon() != null)
+            equipInfo += "🗡️ " + activePlayer.getEquippedWeapon().getName() + "  ";
+        if (activePlayer.getEquippedArmor() != null)
+            equipInfo += "🛡️ " + activePlayer.getEquippedArmor().getName();
         if (!equipInfo.isEmpty()) {
             System.out.println(" Equipo: " + DIM + equipInfo + RESET);
         }
@@ -267,7 +272,8 @@ public class Game implements Serializable {
     }
 
     private String makeBar(int current, int max, int width, String fillColor, String emptyColor) {
-        if (max <= 0) return "[ ]";
+        if (max <= 0)
+            return "[ ]";
         int fill = (int) Math.round((current / (double) max) * width);
         fill = Math.max(0, Math.min(width, fill));
         int empty = width - fill;
@@ -285,7 +291,7 @@ public class Game implements Serializable {
     }
 
     // =========================================================
-    //  UTILIDADES DE ENTRADA — Scanner a prueba de fallos
+    // UTILIDADES DE ENTRADA — Scanner a prueba de fallos
     // =========================================================
 
     /**
@@ -319,7 +325,8 @@ public class Game implements Serializable {
             if (input.length() == 1) {
                 char c = input.charAt(0);
                 for (char valid : validOptions) {
-                    if (c == valid) return c;
+                    if (c == valid)
+                        return c;
                 }
             }
             System.out.print("Opción no válida. Introduce una de [w/a/s/d/i/q]: ");
